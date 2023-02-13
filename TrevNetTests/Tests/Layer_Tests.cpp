@@ -20,15 +20,13 @@ using namespace NVL_AI;
  */
 TEST(Layer_Test, correct_node_count)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
-
-	// Execute
+	auto layer_1 = Layer(5);
+	auto layer_2 = Layer(3);
 
 	// Confirm
-
-	// Teardown
+	ASSERT_EQ(layer_1.GetNodes().size(), 5);
+	ASSERT_EQ(layer_2.GetNodes().size(), 3);
 }
 
 /**
@@ -36,15 +34,28 @@ TEST(Layer_Test, correct_node_count)
  */
 TEST(Layer_Test, correct_edge_count)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto layer = Layer(5);
 
 	// Execute
+	layer.AddEdge(0, 1, 0.5);
+	layer.AddEdge(0, 2, 0.6);
+	layer.AddEdge(1, 1, 0.3);
 
 	// Confirm
+	ASSERT_EQ(layer.GetEdges().size(), 3);
 
-	// Teardown
+	ASSERT_EQ(layer.GetEdges()[0]->GetSource(), 0);
+	ASSERT_EQ(layer.GetEdges()[0]->GetDestination(), 1);
+	ASSERT_EQ(layer.GetEdges()[0]->GetWeight(), 0.5);
+
+	ASSERT_EQ(layer.GetEdges()[1]->GetSource(), 0);
+	ASSERT_EQ(layer.GetEdges()[1]->GetDestination(), 2);
+	ASSERT_EQ(layer.GetEdges()[1]->GetWeight(), 0.6);
+
+	ASSERT_EQ(layer.GetEdges()[2]->GetSource(), 1);
+	ASSERT_EQ(layer.GetEdges()[2]->GetDestination(), 1);
+	ASSERT_EQ(layer.GetEdges()[2]->GetWeight(), 0.3);
 }
 
 /**
@@ -52,15 +63,22 @@ TEST(Layer_Test, correct_edge_count)
  */
 TEST(Layer_Test, source_edge_retrieval)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto layer = Layer(5);
+
+	layer.AddEdge(0, 1, 0.5);
+	layer.AddEdge(0, 2, 0.6);
+	layer.AddEdge(1, 1, 0.3);
 
 	// Execute
+	auto set_1 = EdgeSet(); layer.GetSourceEdges(0, set_1);
+	auto set_2 = EdgeSet(); layer.GetSourceEdges(1, set_2);
+	auto set_3 = EdgeSet(); layer.GetSourceEdges(2, set_3);
 
 	// Confirm
-
-	// Teardown
+	ASSERT_EQ(set_1.size(), 2); ASSERT_EQ(set_1[0]->GetWeight(), 0.5); ASSERT_EQ(set_1[1]->GetWeight(), 0.6);
+	ASSERT_EQ(set_2.size(), 1); ASSERT_EQ(set_2[0]->GetWeight(), 0.3);
+	ASSERT_EQ(set_3.size(), 0);
 }
 
 /**
@@ -68,13 +86,20 @@ TEST(Layer_Test, source_edge_retrieval)
  */
 TEST(Layer_Test, destination_edge_retrieval)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto layer = Layer(5);
+
+	layer.AddEdge(0, 1, 0.5);
+	layer.AddEdge(0, 2, 0.6);
+	layer.AddEdge(1, 1, 0.3);
 
 	// Execute
+	auto set_1 = EdgeSet(); layer.GetDestinationEdges(0, set_1);
+	auto set_2 = EdgeSet(); layer.GetDestinationEdges(1, set_2);
+	auto set_3 = EdgeSet(); layer.GetDestinationEdges(2, set_3);
 
 	// Confirm
-
-	// Teardown
+	ASSERT_EQ(set_1.size(), 0);
+	ASSERT_EQ(set_2.size(), 2); ASSERT_EQ(set_2[0]->GetWeight(), 0.5); ASSERT_EQ(set_2[1]->GetWeight(), 0.3);
+	ASSERT_EQ(set_3.size(), 1); ASSERT_EQ(set_3[0]->GetWeight(), 0.6); 
 }

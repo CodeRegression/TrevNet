@@ -19,7 +19,7 @@ using namespace NVL_AI;
  */
 Layer::Layer(int nodeCount)
 {
-	throw runtime_error("Not implemented");
+	for (auto i = 0; i < nodeCount; i++) _nodes.push_back(new Node());
 }
 
 /**
@@ -37,13 +37,16 @@ Layer::~Layer()
 
 /**
  * @brief Adds an edge to the system
- * @param sourceIndex The index of the source node we are referencing
- * @param destinationIndex The index of the destination we are referencing
+ * @param sourceIndex The nodeId of the source node we are referencing
+ * @param destinationIndex The nodeId of the destination we are referencing
  * @param weight The initial weight of the node
  */
 void Layer::AddEdge(int sourceIndex, int destinationIndex, double weight)
 {
-	throw runtime_error("Not implemented");
+	auto edge = new Edge(sourceIndex, destinationIndex, weight);
+	UpdateLookup(_sourceLookup, sourceIndex, edge);
+	UpdateLookup(_destinationLookup, destinationIndex, edge);
+	_edges.push_back(edge);
 }
 
 //--------------------------------------------------
@@ -57,15 +60,44 @@ void Layer::AddEdge(int sourceIndex, int destinationIndex, double weight)
  */
 void Layer::GetSourceEdges(int nodeId, EdgeSet& edges)
 {
-	throw runtime_error("Not implemented");
+	GetEdgeSet(_sourceLookup, nodeId, edges);
 }
 
 /**
  * @brief Get all the edges related to a destination
- * @param GetDestinationEdges Get all the edges related to the given destination
+ * @param nodeId Get all the edges related to the given destination
  * @param edges The edges that are associated with the given node
  */
-void Layer::GetDestinationEdges(int GetDestinationEdges, EdgeSet& edges)
+void Layer::GetDestinationEdges(int nodeId, EdgeSet& edges)
 {
-	throw runtime_error("Not implemented");
+	GetEdgeSet(_destinationLookup, nodeId, edges);
+}
+
+//--------------------------------------------------
+// Helpers
+//--------------------------------------------------
+
+/**
+ * @brief Update the given lookup method
+ * @param lookup The lookup that we are updating
+ * @param nodeId The nodeId of the value being updated
+ * @param edge The edge that is being added
+ */
+void Layer::UpdateLookup(unordered_map<int, EdgeSet> & lookup, int nodeId, Edge * edge) 
+{
+	lookup[nodeId].push_back(edge);
+}
+
+/**
+ * @brief Retrieve the given set of edges
+ * @param lookup The lookup that we are updating
+ * @param nodeId The nodeId of the value that is being updated
+ * @param edges The edge that is being loaded
+ */
+void Layer::GetEdgeSet(unordered_map<int, EdgeSet> & lookup, int nodeId, EdgeSet& edges) 
+{
+	edges.clear();
+	if (lookup.find(nodeId) == lookup.end()) return;
+	auto& edgeSet = lookup[nodeId];
+	for (auto edge : edgeSet) edges.push_back(edge); 
 }
