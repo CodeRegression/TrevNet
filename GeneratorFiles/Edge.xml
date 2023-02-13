@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+
+<class>
+
+<namespace>NVL_AI</namespace>
+<solution>TrevNetLib</solution>
+<name>Edge</name>
+<description>Describes the link between two nodes in a neural network</description>
+
+<includes>
+    <include name="iostream" namespace="std" local="false" />
+</includes>
+
+<variables>
+    <variable type="int" name="source" code="10" />
+    <variable type="int" name="destination" code="10" />
+    <variable type="double" name="weight" code="11" />
+</variables>
+
+<constructors>
+    <constructor type="auto" inline="false" />
+</constructors>
+
+</class>

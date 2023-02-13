@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+
+<class>
+
+<namespace>NVL_AI</namespace>
+<solution>TrevNetLib</solution>
+<name>Node</name>
+<description>The definition of a node within the system</description>
+
+<includes>
+    <include name="iostream" namespace="std" local="false" />
+</includes>
+
+<variables>
+    <variable type="double" name="forwardValue" code="11" />
+    <variable type="double" name="backwardValue" code="11" />
+</variables>
+
+<constructors>
+    <constructor type="empty" inline="false" />
+</constructors>
+
+</class>
