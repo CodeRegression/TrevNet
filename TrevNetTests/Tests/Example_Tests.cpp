@@ -8,24 +8,14 @@
 
 #include <gtest/gtest.h>
 
-#include <TrevNetLib/Arguments.h>
-using namespace NVL_Tools;
-
 //--------------------------------------------------
 // Test Methods
 //--------------------------------------------------
 
 /**
- * @brief Confirm that the arguments are initialized correct
+ * @brief Verify that unit tests are active
  */
-TEST(Arguments_Test, ConfirmProjectLoad)
+TEST(Example_Test, confirm_unit_tests)
 {
-	// Setup
-	char * param[] = { (char *)"app_path", (char*) "param" };
-
-	// Execute
-	auto arguments = Arguments(2, param);
-
-	// Confirm
-	ASSERT_EQ(arguments.GetParam(), "param");
+	ASSERT_TRUE(true);
 }
