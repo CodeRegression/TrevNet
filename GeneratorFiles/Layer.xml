@@ -1,0 +1,64 @@
+<?xml version="1.0" ?>
+
+<class terminator="true">
+
+<namespace>NVL_AI</namespace>
+<solution>TrevNetLib</solution>
+<name>Layer</name>
+<description>A layer within the neural network</description>
+
+<includes>
+    <include name="vector" namespace="std" local="false" />
+    <include name="unordered_map" namespace="std" local="false" />
+    <include name="iostream" namespace="std" local="false" />
+    <include name="Model/Node.h" local="true" />
+    <include name="Model/Edge.h" local="true" />
+</includes>
+
+<variables>
+    <variable type="vector<Node *>" name="nodes" code="10" />
+    <variable type="EdgeSet" name="edges" code="10" />
+    <variable type="unordered_map<int, EdgeSet>" name="sourceLookup" code="10" />
+    <variable type="unordered_map<int, EdgeSet>" name="destinationLookup" code="10" />
+</variables>
+
+<constructors>
+
+    <!-- Main Constructor -->
+    <constructor type="custom" inline="false">
+        <parameter type="int" name="nodeCount" description="The number of nodes that should be in the layer" />
+    </constructor>
+
+</constructors>
+
+<methods>
+
+    <!-- Add an edge to the system -->
+    <method section="Add Edge" access="public" return="void" name="AddEdge" description="Adds an edge to the system" inline="false">
+        <parameter type="int" name="sourceIndex" description="The index of the source node we are referencing" />
+        <parameter type="int" name="destinationIndex" description="The index of the destination we are referencing" />
+        <parameter type="double" name="weight" description="The initial weight of the node" />
+    </method>    
+
+    <!-- Retrieve all the edges related with a source node -->
+    <method section="Retrieval" access="public" return="void" name="GetSourceEdges" description="Get all the edges related to the source" inline="false">
+        <parameter type="int" name="nodeId" description="The identifier of the node that we want the edges for" />
+        <parameter type="EdgeSet&" name="edges" description="The edges that are associated with this node" />
+    </method>
+
+    <!-- Retrieve all the edges related to a destination node -->
+    <method section="Retrieval" access="public" return="void" name="GetDestinationEdges" description="Get all the edges related to a destination" inline="false">
+        <parameter type="int" access="public" return="void" name="GetDestinationEdges" description="Get all the edges related to the given destination" />
+        <parametter type="EdgeSet&" name="edges" description="The edges that are associated with the given node" />
+    </method>
+
+</methods>
+
+<tests>
+    <test name="correct_node_count" description="Verify that the correct number of nodes are created" exception="false" />
+    <test name="correct_edge_count" description="Verify that the correct number of edges are created" exception="false" />
+    <test name="source_edge_retrieval" description="Determine that we are able to retrieve the valid source edges" />
+    <test name="destination_edge_retrieval" description="Determine that we are able to retrieve the valid destination edges" />
+</tests> 
+
+</class>

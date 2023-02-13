@@ -11,9 +11,9 @@ include_directories("../" ${OpenCV_INCLUDE_DIRS})
 
 # Create Library
 add_library (TrevNetLib STATIC
-	Generators/RandomGenerator.cpp
-	Generators/SeriesGenerator.cpp
-	Models/Edge.cpp
-	Models/Node.cpp
+	Generator/RandomGenerator.cpp
+	Generator/SeriesGenerator.cpp
+	Model/Edge.cpp
+	Model/Node.cpp
+	Layer.cpp
 )
-
