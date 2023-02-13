@@ -1,0 +1,36 @@
+<?xml version="1.0" ?>
+
+<class>
+
+<namespace>NVL_AI</namespace>
+<solution>TrevNetLib</solution>
+<name>NetworkUtils</name>
+<description>A set of utilities for performing the neural network calculations</description>
+
+<includes>
+    <include name="iostream" namespace="std" local="false" />
+    <include name="Layer.h" local="true" />
+</includes>
+
+<methods>
+
+    <!-- Forward Propagate Step -->
+    <method section="Forward" modifiers="static" access="public" return="void" name="ForwardPropagate" description="Executes a round of forward propagation between two layers" inline="false">
+        <parameter type="Layer*" name="bottomLayer" description="The layer that we are propagating FROM" />
+        <parameter type="Layer*" name="topLayer" description="The layer that we are propagating TO" />
+    </method>    
+
+    <!-- Backward Propagate Step -->
+    <method section="Backward" modifiers="static" access="public" return="void" name="BackwardPropagate" description="Executes a round of backward propagaton between two lyers" inline="false">
+        <parameter type="Layer *" name="topLayer" description="The layer that we are propagating FROM" />
+        <parameter type="Layer *" name="bottomLayer" description="The layer that we are propagating TO" />
+    </method>
+
+</methods>
+
+<tests>
+    <test name="forward_propagate" description="Confirm that forward propagation is working effectively" exception="false" />
+    <test name="backward_propagate" description="Confirm that backward propagation is working effectively" exception="false" />
+</tests> 
+
+</class>

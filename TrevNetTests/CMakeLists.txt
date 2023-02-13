@@ -25,7 +25,9 @@ set_target_properties(UnitTestLib PROPERTIES
 add_executable (TrevNetTests
 	Tests/Example_Tests.cpp
 	Tests/Layer_Tests.cpp
+	Tests/NetworkUtils_Tests.cpp
 )
+
 
 target_link_libraries(TrevNetTests TrevNetLib UnitTestLib OpenSSL::SSL GTest::Main)
 
