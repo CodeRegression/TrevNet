@@ -17,5 +17,7 @@ add_library (TrevNetLib STATIC
 	Model/Node.cpp
 	Layer.cpp
 	NetworkUtils.cpp
+	Network.cpp
 )
+
 
