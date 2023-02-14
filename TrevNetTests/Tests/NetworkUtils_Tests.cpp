@@ -10,6 +10,7 @@
 
 #include <TrevNetLib/NetworkUtils.h>
 #include <TrevNetLib/Generator/SeriesGenerator.h>
+#include <TrevNetLib/Generator/RandomGenerator.h>
 using namespace NVL_AI;
 
 //--------------------------------------------------
@@ -55,7 +56,7 @@ TEST(NetworkUtils_Test, forward_propagate)
 /**
  * @brief Confirm that backward propagation is working effectively
  */
-TEST(NetworkUtils_Test, backward_propagate)
+TEST(NetworkUtils_Test, backward_propagate_simple)
 {
 	// Setup
 	auto generator = SeriesGenerator(vector<double> { 0.3, 0.1, 0.8, 0.8, 0.5, 0.2, 0.4, 0.6 });
@@ -98,6 +99,64 @@ TEST(NetworkUtils_Test, backward_propagate)
 
 	ASSERT_NEAR(w_7[0], t_7, 1e-4);
 	ASSERT_NEAR(w_8[0], t_8, 1e-4);
+
+	// Teardown
+	for (auto& layer : network) delete layer;
+}
+
+/**
+ * @brief Confirm that backward propagation is working effectively
+ */
+TEST(NetworkUtils_Test, backward_propagate_simple_active)
+{
+	// Setup
+	auto generator = SeriesGenerator(vector<double> { 0.3, 0.1, 0.8, 0.8, 0.5, 0.2, 0.4, 0.6 });
+	auto network = vector<Layer *>(); SetupNetwork(network, vector<int> {3, 2, 1}, &generator);
+	auto expected = vector<double> { 0.8 }; auto inputs = vector<double> { 3, 2, 4};
+
+	// Execute
+	for (auto i = 0; i < network.size(); i++) 
+	{
+		auto layer = network[i];
+
+		for (auto j = 0; j < layer->GetEdgeCount(); j++) 
+		{
+			auto weights = vector<double>(); ApproxDerivative(network, inputs, i, j, expected, weights);
+			auto weight_expected = weights[0];
+			ForwardPropagate(network, inputs); BackPropagate(network, inputs, expected);
+			auto weight_actual = NetworkUtils::UpdateWeight(network, i, j, 1);
+			ASSERT_NEAR(weight_expected, weight_actual, 1e-4);	
+		}
+	}
+
+	// Teardown
+	for (auto& layer : network) delete layer;
+}
+
+/**
+ * @brief Confirm that backward propagation is working effectively
+ */
+TEST(NetworkUtils_Test, backward_propagate_multiple_output)
+{
+	// Setup
+	srand (10); auto generator = RandomGenerator();
+	auto network = vector<Layer *>(); SetupNetwork(network, vector<int> {3, 3, 2}, &generator);
+	auto expected = vector<double> { 0.8, 0.7 }; auto inputs = vector<double> { 3, 2, 4};
+
+	// Execute
+	for (auto i = 0; i < network.size(); i++) 
+	{
+		auto layer = network[i];
+
+		for (auto j = 0; j < layer->GetEdgeCount(); j++) 
+		{
+			auto weights = vector<double>(); ApproxDerivative(network, inputs, i, j, expected, weights);
+			auto weight_expected = 0.0; for (auto i = 0; i < weights.size(); i++) weight_expected += weights[i];
+			ForwardPropagate(network, inputs); BackPropagate(network, inputs, expected);
+			auto weight_actual = NetworkUtils::UpdateWeight(network, i, j, 1);
+			ASSERT_NEAR(weight_expected, weight_actual, 1e-4);	
+		}
+	}
 
 	// Teardown
 	for (auto& layer : network) delete layer;

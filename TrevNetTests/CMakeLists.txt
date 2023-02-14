@@ -28,8 +28,7 @@ add_executable (TrevNetTests
 	Tests/NetworkUtils_Tests.cpp
 )
 
-
-target_link_libraries(TrevNetTests TrevNetLib UnitTestLib OpenSSL::SSL GTest::Main)
+target_link_libraries(TrevNetTests TrevNetLib NVLib UnitTestLib ${OpenCV_LIBS} OpenSSL::SSL GTest::Main)
 
 # Find the associated unit tests
 gtest_discover_tests(TrevNetTests)
