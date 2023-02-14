@@ -33,7 +33,7 @@ TEST(XOR_Test, basic_xor_training_test)
 	auto generator = RandomGenerator(); auto network = Network(&generator, vector<int> {2, 10, 1});
 
 	cout << "Starting training" << endl;
-	for (auto i = 0; i < 1000; i++) 
+	for (auto i = 0; i < 300; i++) 
 	{
 		auto total = 0.0;
 		for (auto row = 0; row < data.rows; row++) 
