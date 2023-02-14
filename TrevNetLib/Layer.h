@@ -41,6 +41,7 @@ namespace NVL_AI
 		inline unordered_map<int, EdgeSet>& GetSourceLookup() { return _sourceLookup; }
 		inline unordered_map<int, EdgeSet>& GetDestinationLookup() { return _destinationLookup; }
 		inline int GetNodeCount() { return _nodes.size(); }
+		inline int GetEdgeCount() { return _edges.size(); }
 		inline Node * GetNode(int index) { return _nodes[index]; }
 		inline Edge * GetEdge(int index) { return _edges[index]; }
 	private:

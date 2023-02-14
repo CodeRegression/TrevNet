@@ -18,5 +18,5 @@ using namespace NVL_AI;
  */
 Node::Node()
 {
-	// Extra intialization can go here
+	_forwardValue = 0; _backwardValue = 0;
 }

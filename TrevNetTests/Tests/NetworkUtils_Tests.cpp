@@ -74,20 +74,30 @@ TEST(NetworkUtils_Test, backward_propagate)
 	auto w_7 = vector<double>(); ApproxDerivative(network, inputs, 1, 0, expected, w_7);
 	auto w_8 = vector<double>(); ApproxDerivative(network, inputs, 1, 1, expected, w_8);
 
-	ForwardPropagate(network, inputs);
-	BackPropagate(network, inputs, expected);
+	ForwardPropagate(network, inputs); BackPropagate(network, inputs, expected);
 
+	auto t_1 = NetworkUtils::UpdateWeight(network, 0, 0, 1);
+	auto t_2 = NetworkUtils::UpdateWeight(network, 0, 1, 1);
+	auto t_3 = NetworkUtils::UpdateWeight(network, 0, 2, 1);
+
+	auto t_4 = NetworkUtils::UpdateWeight(network, 0, 3, 1);
+	auto t_5 = NetworkUtils::UpdateWeight(network, 0, 4, 1);
+	auto t_6 = NetworkUtils::UpdateWeight(network, 0, 5, 1);
+
+	auto t_7 = NetworkUtils::UpdateWeight(network, 1, 0, 1);
+	auto t_8 = NetworkUtils::UpdateWeight(network, 1, 1, 1);
+	
 	// Confirm
-	ASSERT_EQ(w_1[0], NetworkUtils::UpdateWeight(network[0], 0, 1));
-	ASSERT_EQ(w_2[0], NetworkUtils::UpdateWeight(network[0], 1, 1));
-	ASSERT_EQ(w_3[0], NetworkUtils::UpdateWeight(network[0], 2, 1));
+	ASSERT_NEAR(w_1[0], t_1, 1e-4);
+	ASSERT_NEAR(w_2[0], t_2, 1e-4);
+	ASSERT_NEAR(w_3[0], t_3, 1e-4);
 
-	ASSERT_EQ(w_4[0], NetworkUtils::UpdateWeight(network[0], 3, 1));
-	ASSERT_EQ(w_5[0], NetworkUtils::UpdateWeight(network[0], 4, 1));
-	ASSERT_EQ(w_6[0], NetworkUtils::UpdateWeight(network[0], 5, 1));
+	ASSERT_NEAR(w_4[0], t_4, 1e-4);
+	ASSERT_NEAR(w_5[0], t_5, 1e-4);
+	ASSERT_NEAR(w_6[0], t_6, 1e-4);
 
-	ASSERT_EQ(w_7[0], NetworkUtils::UpdateWeight(network[1], 0, 1));
-	ASSERT_EQ(w_8[0], NetworkUtils::UpdateWeight(network[1], 1, 1));
+	ASSERT_NEAR(w_7[0], t_7, 1e-4);
+	ASSERT_NEAR(w_8[0], t_8, 1e-4);
 
 	// Teardown
 	for (auto& layer : network) delete layer;
@@ -199,7 +209,7 @@ void ApproxDerivative(vector<Layer *>& network, const vector<double>& inputs, in
 	}
 
 	// Calculate the update
-	auto delta = 1e-4; network[layerId]->GetEdge(edgeId)->SetWeight(weight + delta);
+	auto delta = 1e-8; network[layerId]->GetEdge(edgeId)->SetWeight(weight + delta);
 	ForwardPropagate(network, inputs);
 	auto errors_2 = vector<double>(); 
 	for (auto i = 0; i < network[lastLayer]->GetNodeCount(); i++) 

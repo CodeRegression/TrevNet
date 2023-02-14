@@ -47,7 +47,25 @@ void NetworkUtils::ForwardPropagate(Layer* bottomLayer, Layer* topLayer)
  */
 void NetworkUtils::BackwardPropagate(Layer * topLayer, Layer * bottomLayer)
 {
-	throw runtime_error("Not implemented");
+	for (auto i = 0; i < bottomLayer->GetNodeCount(); i++) 
+	{
+		auto edges = vector<Edge *>(); bottomLayer->GetSourceEdges(i, edges);
+		auto nodeValue = bottomLayer->GetNode(i)->GetForwardValue();
+		auto isZero = (abs(nodeValue) < 1e-8);
+		if (isZero) { bottomLayer->GetNode(i)->SetBackwardValue(0); continue; }
+
+		// NOTE: This method heavily relies on the LeRU activation function!
+
+		auto total = 0.0;
+		for (auto edge : edges) 
+		{
+			auto nodeDelta = topLayer->GetNode(edge->GetDestination())->GetBackwardValue();
+			auto update = edge->GetWeight() * nodeDelta;
+			total += update;
+		}
+
+		bottomLayer->GetNode(i)->SetBackwardValue(total);
+	}
 }
 
 //--------------------------------------------------
@@ -61,9 +79,20 @@ void NetworkUtils::BackwardPropagate(Layer * topLayer, Layer * bottomLayer)
  * @param factor The weight factor that we plan to update the weights by
  * @return double The update delta
  */
-double NetworkUtils::UpdateWeight(Layer * layer, int edgeId, double factor) 
+double NetworkUtils::UpdateWeight(vector<Layer *>& network, int layerId, int edgeId, double factor) 
 {
-	throw runtime_error("Not implemented");
+	if (network.size() <= (layerId + 1)) throw runtime_error("LayerId is out of range");
+
+	auto edge = network[layerId]->GetEdge(edgeId);
+
+	auto destinationNode = network[layerId + 1]->GetNode(edge->GetDestination());
+	auto sourceNode = network[layerId]->GetNode(edge->GetSource());
+	
+	auto weightDelta = sourceNode->GetForwardValue() * destinationNode->GetBackwardValue();
+	auto originalWeight = edge->GetWeight();
+	auto update = -1 * factor * weightDelta;
+	edge->SetWeight(originalWeight + update);
+	return weightDelta;
 }
 
 //--------------------------------------------------
