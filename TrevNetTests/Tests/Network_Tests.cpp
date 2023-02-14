@@ -9,6 +9,8 @@
 #include <gtest/gtest.h>
 
 #include <TrevNetLib/Network.h>
+#include <TrevNetLib/Generator/SeriesGenerator.h>
+#include <TrevNetLib/Generator/RandomGenerator.h>
 using namespace NVL_AI;
 
 //--------------------------------------------------
@@ -20,15 +22,20 @@ using namespace NVL_AI;
  */
 TEST(Network_Test, confirm_network)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto generator = RandomGenerator();
 
 	// Execute
+	auto network = Network(&generator, vector<int> { 3, 2, 1 });
 
 	// Confirm
-
-	// Teardown
+	ASSERT_EQ(network.GetLayers().size(), 3);
+	ASSERT_EQ(network.GetLayers()[0]->GetNodeCount(), 3);
+	ASSERT_EQ(network.GetLayers()[0]->GetEdgeCount(), 6);
+	ASSERT_EQ(network.GetLayers()[1]->GetNodeCount(), 2);
+	ASSERT_EQ(network.GetLayers()[1]->GetEdgeCount(), 2);
+	ASSERT_EQ(network.GetLayers()[2]->GetNodeCount(), 1);
+	ASSERT_EQ(network.GetLayers()[2]->GetEdgeCount(), 0);
 }
 
 /**
@@ -36,15 +43,16 @@ TEST(Network_Test, confirm_network)
  */
 TEST(Network_Test, evaluate)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto generator = SeriesGenerator(vector<double> { 0.3, 0.1, 0.8, 0.8, 0.5, 0.2, 0.4, 0.6 });
+	auto network = Network(&generator, vector<int> {3, 2, 1} );
 
 	// Execute
+	auto output = vector<double>(); network.Evaluate(vector<double> { -3, 2, 4}, output);
 
 	// Confirm
-
-	// Teardown
+	ASSERT_EQ(output.size(), 1);
+	ASSERT_EQ(output[0], 1);
 }
 
 /**
@@ -52,13 +60,16 @@ TEST(Network_Test, evaluate)
  */
 TEST(Network_Test, update)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto generator = SeriesGenerator(vector<double> { 0.3, 0.1, 0.8, 0.8, 0.5, 0.2, 0.4, 0.6 });
+	auto network = Network(&generator, vector<int> {3, 2, 1} );
+	auto inputs = vector<double> { -3, 2, 4}; auto expected = vector<double> { 0.8 };
 
 	// Execute
+	auto output_1 = vector<double>(); network.Evaluate(inputs, output_1);
+	network.Update(inputs, expected, 1e-4);
+	auto output_2 = vector<double>(); network.Evaluate(inputs, output_2);
 
 	// Confirm
-
-	// Teardown
+	ASSERT_GT(NetworkUtils::GetError(expected[0], output_1[0]), NetworkUtils::GetError(expected[0], output_2[0]));
 }

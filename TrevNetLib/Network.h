@@ -18,15 +18,15 @@ namespace NVL_AI
 {
 	class Network
 	{
-		private:
-			vector<Layer *> _network;
-		public:
-			Network(NumberGenerator * generator, const vector<int>& structure);
-			~Network();
+	private:
+		vector<Layer *> _layers;
+	public:
+		Network(NumberGenerator * generator, const vector<int>& structure);
+		~Network();
 
-			void Evaluate(const vector<double>& inputs, vector<double>& outputs);
-			double Update(const vector<double>& inputs, const vector<double>& expectedOutputs, double learnRate);
+		void Evaluate(const vector<double>& inputs, vector<double>& outputs);
+		double Update(const vector<double>& inputs, const vector<double>& expectedOutputs, double learnRate);
 
-			inline vector<Layer *>& GetNetwork() { return _network; }
+		inline vector<Layer *>& GetLayers() { return _layers; }
 	};
 }
