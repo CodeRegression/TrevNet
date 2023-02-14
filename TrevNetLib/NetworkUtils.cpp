@@ -50,6 +50,26 @@ void NetworkUtils::BackwardPropagate(Layer * topLayer, Layer * bottomLayer)
 	throw runtime_error("Not implemented");
 }
 
+//--------------------------------------------------
+// Weight Update Logic
+//--------------------------------------------------
+
+/**
+ * @brief Add the functionality to update the weight of the system
+ * @param layer The layer that we are updating
+ * @param edgeId The edge that we care about
+ * @param factor The weight factor that we plan to update the weights by
+ * @return double The update delta
+ */
+double NetworkUtils::UpdateWeight(Layer * layer, int edgeId, double factor) 
+{
+	throw runtime_error("Not implemented");
+}
+
+//--------------------------------------------------
+// Activation Function
+//--------------------------------------------------
+
 /**
  * @brief Implementation of the ReLU activation function
  * @param value The value that we are using
@@ -59,4 +79,20 @@ double NetworkUtils::Relu(double value)
 {
 	if (value >= 0) return value;
 	else return 0;
+}
+
+//--------------------------------------------------
+// Get Error
+//--------------------------------------------------
+
+/**
+ * @brief Calculate the error associated with real and fake points
+ * @param expected Values that are expected
+ * @param actual The values that the system generated
+ * @return double The associated error
+ */
+double NetworkUtils::GetError(double expected, double actual) 
+{
+	auto difference = (expected - actual);
+	return 0.5 * difference * difference;
 }

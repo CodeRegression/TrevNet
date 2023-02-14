@@ -20,6 +20,8 @@ namespace NVL_AI
 	public:
 		static void ForwardPropagate(Layer* bottomLayer, Layer* topLayer);
 		static void BackwardPropagate(Layer * topLayer, Layer * bottomLayer);
+		static double UpdateWeight(Layer * layer, int edgeId, double factor);
 		static double Relu(double value);
+		static double GetError(double expected, double actual);
 	};
 }

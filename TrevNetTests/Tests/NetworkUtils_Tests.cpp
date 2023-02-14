@@ -19,6 +19,8 @@ void SetupNetwork(vector<Layer *>& network, const vector<int>& counts, NumberGen
 void SetInputs(vector<Layer *>& network, const vector<double>& inputs);
 void ForwardPropagate(vector<Layer *>& network, const vector<double>& inputs);
 void ConnectLayer(Layer * layer, Layer * next, NumberGenerator* generator);
+void ApproxDerivative(vector<Layer *>& network, const vector<double>& inputs, int layerId, int edgeId, const vector<double>& expected, vector<double>& derivatives);
+void BackPropagate(vector<Layer *>& network, const vector<double>& inputs, const vector<double>& expected);
 
 //--------------------------------------------------
 // Test Methods
@@ -55,15 +57,40 @@ TEST(NetworkUtils_Test, forward_propagate)
  */
 TEST(NetworkUtils_Test, backward_propagate)
 {
-	FAIL() << "Not implemented";
-
 	// Setup
+	auto generator = SeriesGenerator(vector<double> { 0.3, 0.1, 0.8, 0.8, 0.5, 0.2, 0.4, 0.6 });
+	auto network = vector<Layer *>(); SetupNetwork(network, vector<int> {3, 2, 1}, &generator);
+	auto expected = vector<double> { 0.8 }; auto inputs = vector<double> { -3, 2, 4};
 
 	// Execute
+	auto w_1 = vector<double>(); ApproxDerivative(network, inputs, 0, 0, expected, w_1);
+	auto w_2 = vector<double>(); ApproxDerivative(network, inputs, 0, 1, expected, w_2);
+	auto w_3 = vector<double>(); ApproxDerivative(network, inputs, 0, 2, expected, w_3);
+
+	auto w_4 = vector<double>(); ApproxDerivative(network, inputs, 0, 3, expected, w_4);
+	auto w_5 = vector<double>(); ApproxDerivative(network, inputs, 0, 4, expected, w_5);
+	auto w_6 = vector<double>(); ApproxDerivative(network, inputs, 0, 5, expected, w_6);
+
+	auto w_7 = vector<double>(); ApproxDerivative(network, inputs, 1, 0, expected, w_7);
+	auto w_8 = vector<double>(); ApproxDerivative(network, inputs, 1, 1, expected, w_8);
+
+	ForwardPropagate(network, inputs);
+	BackPropagate(network, inputs, expected);
 
 	// Confirm
+	ASSERT_EQ(w_1[0], NetworkUtils::UpdateWeight(network[0], 0, 1));
+	ASSERT_EQ(w_2[0], NetworkUtils::UpdateWeight(network[0], 1, 1));
+	ASSERT_EQ(w_3[0], NetworkUtils::UpdateWeight(network[0], 2, 1));
+
+	ASSERT_EQ(w_4[0], NetworkUtils::UpdateWeight(network[0], 3, 1));
+	ASSERT_EQ(w_5[0], NetworkUtils::UpdateWeight(network[0], 4, 1));
+	ASSERT_EQ(w_6[0], NetworkUtils::UpdateWeight(network[0], 5, 1));
+
+	ASSERT_EQ(w_7[0], NetworkUtils::UpdateWeight(network[1], 0, 1));
+	ASSERT_EQ(w_8[0], NetworkUtils::UpdateWeight(network[1], 1, 1));
 
 	// Teardown
+	for (auto& layer : network) delete layer;
 }
 
 //--------------------------------------------------
@@ -137,5 +164,94 @@ void ConnectLayer(Layer * layer, Layer * next, NumberGenerator * generator)
 			auto edge = new Edge(j, i, weight);
 			layer->AddEdge(edge);
 		}
+	}
+}
+
+/**
+ * @brief Estimate an approximate derivative for a weight
+ * @param network The network
+ * @param inputs The set of input points
+ * @param layerId The layer identifier
+ * @param edgeId The edge identifier
+ * @param expected The expected outputs
+ * @param derivatives The output derivatives
+ */
+void ApproxDerivative(vector<Layer *>& network, const vector<double>& inputs, int layerId, int edgeId, const vector<double>& expected, vector<double>& derivatives) 
+{
+	// Retrieve general variables
+	auto lastLayer = network.size() - 1; 
+	
+	// Perform some minor validation
+	if (expected.size() != network[lastLayer]->GetNodeCount()) throw runtime_error("Expected count is wrong");
+
+	// Retrieve the initial weight
+	auto weight = network[layerId]->GetEdge(edgeId)->GetWeight();
+
+	// Calculate the initial value
+	ForwardPropagate(network, inputs);
+	auto errors_1 = vector<double>(); 
+	for (auto i = 0; i < network[lastLayer]->GetNodeCount(); i++) 
+	{
+		auto actualValue = network[lastLayer]->GetNode(i)->GetForwardValue();
+		auto expectedValue = expected[i];
+		auto error = NetworkUtils::GetError(expectedValue, actualValue);
+		errors_1.push_back(error);
+	}
+
+	// Calculate the update
+	auto delta = 1e-4; network[layerId]->GetEdge(edgeId)->SetWeight(weight + delta);
+	ForwardPropagate(network, inputs);
+	auto errors_2 = vector<double>(); 
+	for (auto i = 0; i < network[lastLayer]->GetNodeCount(); i++) 
+	{
+		auto actualValue = network[lastLayer]->GetNode(i)->GetForwardValue();
+		auto expectedValue = expected[i];
+		auto error = NetworkUtils::GetError(expectedValue, actualValue);
+		errors_2.push_back(error);
+	}
+
+	// Roll back the weight change (to prevent unexpected "side-effects")
+	network[layerId]->GetEdge(edgeId)->SetWeight(weight);
+
+	// Determine the derivatives
+	derivatives.clear();
+	for (auto i = 0; i < network[lastLayer]->GetNodeCount(); i++) 
+	{
+		auto gradient = (errors_2[i] - errors_1[i]) / delta;
+		derivatives.push_back(gradient);
+	}
+}
+
+/**
+ * @brief Add the logic for back propagation
+ * @param network The network
+ * @param inputs The inputs
+ * @param expected The expected values
+ */
+void BackPropagate(vector<Layer *>& network, const vector<double>& inputs, const vector<double>& expected) 
+{
+	// Retrieve general variables
+	auto lastLayer = network.size() - 1; 
+	
+	// Perform some minor validation
+	if (expected.size() != network[lastLayer]->GetNodeCount()) throw runtime_error("Expected count is wrong");;
+
+	// Setup the inputs
+	SetInputs(network, inputs);
+
+	// Set the initial errors
+	for (auto i = 0; i < network[lastLayer]->GetNodeCount(); i++) 
+	{
+		auto actualValue = network[lastLayer]->GetNode(i)->GetForwardValue();
+		auto expectedValue = expected[i];
+		auto errorDelta = actualValue - expectedValue;
+		auto activationDelta = actualValue > 0 ? 1 : 0;
+		network[lastLayer]->GetNode(i)->SetBackwardValue(errorDelta * activationDelta); 
+	}
+
+	// Calculate the backprop deltas
+	for (auto i = lastLayer; i > 0; i--) 
+	{
+		NetworkUtils::BackwardPropagate(network[i], network[i-1]);
 	}
 }
