@@ -162,6 +162,35 @@ TEST(NetworkUtils_Test, backward_propagate_multiple_output)
 	for (auto& layer : network) delete layer;
 }
 
+/**
+ * @brief Confirm that backward propagation is working effectively
+ */
+TEST(NetworkUtils_Test, backward_propagate_bigger_test)
+{
+	// Setup
+	srand (10); auto generator = RandomGenerator();
+	auto network = vector<Layer *>(); SetupNetwork(network, vector<int> {3, 10, 3, 5, 2}, &generator);
+	auto expected = vector<double> { 0.8, 0.7 }; auto inputs = vector<double> { 3, 2, 4};
+
+	// Execute
+	for (auto i = 0; i < network.size(); i++) 
+	{
+		auto layer = network[i];
+
+		for (auto j = 0; j < layer->GetEdgeCount(); j++) 
+		{
+			auto weights = vector<double>(); ApproxDerivative(network, inputs, i, j, expected, weights);
+			auto weight_expected = 0.0; for (auto i = 0; i < weights.size(); i++) weight_expected += weights[i];
+			ForwardPropagate(network, inputs); BackPropagate(network, inputs, expected);
+			auto weight_actual = NetworkUtils::UpdateWeight(network, i, j, 1);
+			ASSERT_NEAR(weight_expected, weight_actual, 1e-1);	
+		}
+	}
+
+	// Teardown
+	for (auto& layer : network) delete layer;
+}
+
 //--------------------------------------------------
 // Helper Methods
 //--------------------------------------------------
@@ -268,7 +297,7 @@ void ApproxDerivative(vector<Layer *>& network, const vector<double>& inputs, in
 	}
 
 	// Calculate the update
-	auto delta = 1e-8; network[layerId]->GetEdge(edgeId)->SetWeight(weight + delta);
+	auto delta = 1e-6; network[layerId]->GetEdge(edgeId)->SetWeight(weight + delta);
 	ForwardPropagate(network, inputs);
 	auto errors_2 = vector<double>(); 
 	for (auto i = 0; i < network[lastLayer]->GetNodeCount(); i++) 
