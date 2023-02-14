@@ -31,7 +31,7 @@ namespace NVL_AI
 		Layer(int nodeCount);
 		~Layer();
 
-		void AddEdge(int sourceIndex, int destinationIndex, double weight);
+		void AddEdge(Edge * edge);
 
 		void GetSourceEdges(int nodeId, EdgeSet& edges);
 		void GetDestinationEdges(int nodeId, EdgeSet& edges);
@@ -40,6 +40,8 @@ namespace NVL_AI
 		inline EdgeSet& GetEdges() { return _edges; }
 		inline unordered_map<int, EdgeSet>& GetSourceLookup() { return _sourceLookup; }
 		inline unordered_map<int, EdgeSet>& GetDestinationLookup() { return _destinationLookup; }
+		inline int GetNodeCount() { return _nodes.size(); }
+		inline Node * GetNode(int index) { return _nodes[index]; }
 	private:
 		void UpdateLookup(unordered_map<int, EdgeSet> & lookup, int nodeId, Edge * edge);
 		void GetEdgeSet(unordered_map<int, EdgeSet> & lookup, int nodeId, EdgeSet& edges);

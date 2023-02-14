@@ -20,7 +20,20 @@ using namespace NVL_AI;
  */
 void NetworkUtils::ForwardPropagate(Layer* bottomLayer, Layer* topLayer)
 {
-	throw runtime_error("Not implemented");
+	for (auto i = 0; i < topLayer->GetNodeCount(); i++) 
+	{
+		auto edges = vector<Edge *>(); bottomLayer->GetDestinationEdges(i, edges);
+
+		auto total = 0.0;
+		for (auto edge : edges) 
+		{
+			auto nodeValue = bottomLayer->GetNode(edge->GetSource())->GetForwardValue();
+			auto update = edge->GetWeight() * nodeValue;
+			total += update;
+		}
+
+		topLayer->GetNode(i)->SetForwardValue(Relu(total));
+	}
 }
 
 //--------------------------------------------------
@@ -35,4 +48,15 @@ void NetworkUtils::ForwardPropagate(Layer* bottomLayer, Layer* topLayer)
 void NetworkUtils::BackwardPropagate(Layer * topLayer, Layer * bottomLayer)
 {
 	throw runtime_error("Not implemented");
+}
+
+/**
+ * @brief Implementation of the ReLU activation function
+ * @param value The value that we are using
+ * @return The value of the activation function
+ */
+double NetworkUtils::Relu(double value) 
+{
+	if (value >= 0) return value;
+	else return 0;
 }

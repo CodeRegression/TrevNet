@@ -38,9 +38,9 @@ TEST(Layer_Test, correct_edge_count)
 	auto layer = Layer(5);
 
 	// Execute
-	layer.AddEdge(0, 1, 0.5);
-	layer.AddEdge(0, 2, 0.6);
-	layer.AddEdge(1, 1, 0.3);
+	layer.AddEdge(new Edge(0, 1, 0.5));
+	layer.AddEdge(new Edge(0, 2, 0.6));
+	layer.AddEdge(new Edge(1, 1, 0.3));
 
 	// Confirm
 	ASSERT_EQ(layer.GetEdges().size(), 3);
@@ -66,9 +66,9 @@ TEST(Layer_Test, source_edge_retrieval)
 	// Setup
 	auto layer = Layer(5);
 
-	layer.AddEdge(0, 1, 0.5);
-	layer.AddEdge(0, 2, 0.6);
-	layer.AddEdge(1, 1, 0.3);
+	layer.AddEdge(new Edge(0, 1, 0.5));
+	layer.AddEdge(new Edge(0, 2, 0.6));
+	layer.AddEdge(new Edge(1, 1, 0.3));
 
 	// Execute
 	auto set_1 = EdgeSet(); layer.GetSourceEdges(0, set_1);
@@ -89,9 +89,9 @@ TEST(Layer_Test, destination_edge_retrieval)
 	// Setup
 	auto layer = Layer(5);
 
-	layer.AddEdge(0, 1, 0.5);
-	layer.AddEdge(0, 2, 0.6);
-	layer.AddEdge(1, 1, 0.3);
+	layer.AddEdge(new Edge(0, 1, 0.5));
+	layer.AddEdge(new Edge(0, 2, 0.6));
+	layer.AddEdge(new Edge(1, 1, 0.3));
 
 	// Execute
 	auto set_1 = EdgeSet(); layer.GetDestinationEdges(0, set_1);

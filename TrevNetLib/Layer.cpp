@@ -37,15 +37,12 @@ Layer::~Layer()
 
 /**
  * @brief Adds an edge to the system
- * @param sourceIndex The nodeId of the source node we are referencing
- * @param destinationIndex The nodeId of the destination we are referencing
- * @param weight The initial weight of the node
+ * @param edge The edge that we are adding
  */
-void Layer::AddEdge(int sourceIndex, int destinationIndex, double weight)
+void Layer::AddEdge(Edge * edge)
 {
-	auto edge = new Edge(sourceIndex, destinationIndex, weight);
-	UpdateLookup(_sourceLookup, sourceIndex, edge);
-	UpdateLookup(_destinationLookup, destinationIndex, edge);
+	UpdateLookup(_sourceLookup, edge->GetSource(), edge);
+	UpdateLookup(_destinationLookup, edge->GetDestination(), edge);
 	_edges.push_back(edge);
 }
 
