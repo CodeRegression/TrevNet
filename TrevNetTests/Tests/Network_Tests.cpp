@@ -67,7 +67,7 @@ TEST(Network_Test, update)
 
 	// Execute
 	auto output_1 = vector<double>(); network.Evaluate(inputs, output_1);
-	network.Update(inputs, expected, 1e-4);
+	network.Update(inputs, expected, 1e-1);
 	auto output_2 = vector<double>(); network.Evaluate(inputs, output_2);
 
 	// Confirm

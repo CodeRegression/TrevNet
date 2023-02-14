@@ -28,5 +28,8 @@ namespace NVL_AI
 		double Update(const vector<double>& inputs, const vector<double>& expectedOutputs, double learnRate);
 
 		inline vector<Layer *>& GetLayers() { return _layers; }
+	private:
+		void ConnectLayer(Layer * layer, Layer * next, NumberGenerator * generator);
+		void BackPropagate(vector<Layer *>& network, const vector<double>& inputs, const vector<double>& expected);
 	};
 }

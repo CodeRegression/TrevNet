@@ -20,7 +20,37 @@ using namespace NVL_AI;
  */
 Network::Network(NumberGenerator * generator, const vector<int>& structure)
 {
-	throw runtime_error("Not implemented");
+	if (structure.size() == 0) throw runtime_error("Cannot have an empty structure"); _layers.clear();
+
+	// Create the first layer
+	_layers.push_back(new Layer(structure[0])); auto previous = _layers[0];
+
+	// Add subsequent layers and edges
+	for (auto i = 1; i < structure.size(); i++) 
+	{
+		auto current = new Layer(structure[i]); _layers.push_back(current);
+		ConnectLayer(previous, current, generator);
+		previous = current;
+	}
+}
+
+/**
+ * @brief A helper for "fully connecting" layers
+ * @param layer The layer that we are adding edges to
+ * @param next The next layer that we are adding those edges to
+ * @param generator The generator we are using for the weights
+ */
+void Network::ConnectLayer(Layer * layer, Layer * next, NumberGenerator * generator) 
+{
+	for (auto i = 0; i < next->GetNodeCount(); i++) 
+	{
+		for (auto j = 0; j < layer->GetNodeCount(); j++) 
+		{
+			auto weight = generator->GetNext(0, 1, 3);
+			auto edge = new Edge(j, i, weight);
+			layer->AddEdge(edge);
+		}
+	}
 }
 
 /**
@@ -28,7 +58,7 @@ Network::Network(NumberGenerator * generator, const vector<int>& structure)
  */
 Network::~Network()
 {
-	// TODO: Add teardown logic here
+	for (auto layer : _layers) delete layer;
 }
 
 //--------------------------------------------------
@@ -42,7 +72,23 @@ Network::~Network()
  */
 void Network::Evaluate(const vector<double>& inputs, vector<double>& outputs)
 {
-	throw runtime_error("Not implemented");
+	if (_layers.size() <= 1) throw runtime_error("The network needs atleast 2 layers to forward propagate");
+
+	if (_layers[0]->GetNodeCount() != inputs.size()) throw runtime_error("There is a mismatch in node counts");
+	for (auto i = 0; i < inputs.size(); i++) _layers[0]->GetNodes()[i]->SetForwardValue(inputs[i]);
+
+	for (auto i = 1; i < _layers.size(); i++) 
+	{
+		NetworkUtils::ForwardPropagate(_layers[i-1], _layers[i]);
+	}
+
+	auto lastLayer = _layers.size() -1;
+
+	outputs.clear();
+	for (auto i = 0; i < _layers[lastLayer]->GetNodeCount(); i++) 
+	{
+		outputs.push_back(_layers[lastLayer]->GetNode(i)->GetForwardValue());
+	}
 }
 
 //--------------------------------------------------
@@ -58,5 +104,65 @@ void Network::Evaluate(const vector<double>& inputs, vector<double>& outputs)
  */
 double Network::Update(const vector<double>& inputs, const vector<double>& expectedOutputs, double learnRate)
 {
-	throw runtime_error("Not implemented");
+	// Perform back propagation
+	BackPropagate(_layers, inputs, expectedOutputs);
+
+	// Update the weights
+	for (auto layerId = 0; layerId < _layers.size(); layerId++) 
+	{
+		for (auto edgeId = 0; edgeId < _layers[layerId]->GetEdgeCount(); edgeId++) 
+		{
+			NetworkUtils::UpdateWeight(_layers, layerId, edgeId, learnRate);
+		}
+	}
+
+	// Forward propagate - to calculate the current errors
+	auto outputs = vector<double>(); Evaluate(inputs, outputs);
+
+	// Extract the errors
+	auto total = 0.0; 
+	for (auto i = 0; i < outputs.size(); i++) 
+	{
+		auto actualValue = outputs[i];
+		auto expectedValue = expectedOutputs[i];
+		auto errorDelta = NetworkUtils::GetError(expectedValue, actualValue);
+		total += errorDelta;
+	}
+
+	// Return the average error across all the outputs
+	return total / outputs.size();
+}
+
+/**
+ * @brief Add the logic for back propagation
+ * @param network The network
+ * @param inputs The inputs
+ * @param expected The expected values
+ */
+void Network::BackPropagate(vector<Layer *>& network, const vector<double>& inputs, const vector<double>& expected) 
+{
+	// Retrieve general variables
+	auto lastLayer = network.size() - 1; 
+	
+	// Perform some minor validation
+	if (expected.size() != network[lastLayer]->GetNodeCount()) throw runtime_error("Expected count is wrong");;
+
+	// Forward propagate first
+	auto outputs = vector<double>(); Evaluate(inputs, outputs);
+
+	// Set the initial errors
+	for (auto i = 0; i < outputs.size(); i++) 
+	{
+		auto actualValue = outputs[i];
+		auto expectedValue = expected[i];
+		auto errorDelta = actualValue - expectedValue;
+		auto activationDelta = actualValue > 0 ? 1 : 0;
+		network[lastLayer]->GetNode(i)->SetBackwardValue(errorDelta * activationDelta); 
+	}
+
+	// Calculate the back propagate deltas
+	for (auto i = lastLayer; i > 0; i--) 
+	{
+		NetworkUtils::BackwardPropagate(network[i], network[i-1]);
+	}
 }
