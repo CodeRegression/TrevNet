@@ -30,10 +30,10 @@ TEST(XOR_Test, basic_xor_training_test)
 	Mat data = (Mat_<double>(4, 3) << 0, 0, 0, 0, 1, 1, 1, 0, 1, 1, 1, 0); auto dataLink = (double *) data.data;
 
 	cout << "Creating network" << endl;
-	auto generator = RandomGenerator(); auto network = Network(&generator, vector<int> {2, 10, 1});
+	auto generator = RandomGenerator(); auto network = Network(&generator, vector<int> {2, 6, 1});
 
 	cout << "Starting training" << endl;
-	for (auto i = 0; i < 300; i++) 
+	for (auto i = 0; i < 400; i++) 
 	{
 		auto total = 0.0;
 		for (auto row = 0; row < data.rows; row++) 
