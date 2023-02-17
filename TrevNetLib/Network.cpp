@@ -184,7 +184,7 @@ void Network::BackPropagate(vector<Layer *>& network, const vector<double>& inpu
  * @brief Construct the init string
  * @param buffer The buffer that we are writing to
  */
-void Network::GetInitString(ofstream& buffer) 
+void Network::GetInitString(ostream& buffer) 
 {
 	throw runtime_error("Not implemented");
 }

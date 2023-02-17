@@ -14,6 +14,11 @@
 using namespace NVL_AI;
 
 //--------------------------------------------------
+// Function Prototypes
+//--------------------------------------------------
+bool Eval(Network& network, bool value1, bool value2);
+
+//--------------------------------------------------
 // Test Methods
 //--------------------------------------------------
 
@@ -79,7 +84,15 @@ TEST(Network_Test, update)
  */
 TEST(Network_Test, init_string_inverse_test) 
 {
-	FAIL() << "Not Implemented";
+	// Initialize
+	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2";
+
+	// Execute
+	auto network = Network(initString);
+	auto buffer = stringstream(); network.GetInitString(buffer);
+
+	// Confirm
+	ASSERT_EQ(initString, buffer.str());
 }
 
 /**
@@ -87,5 +100,32 @@ TEST(Network_Test, init_string_inverse_test)
  */
 TEST(Network_Test, load_test) 
 {
-	FAIL() << "Not Implemented";
+	// Initialize
+	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2";
+	auto network = Network(initString);
+
+	// Confirm
+	ASSERT_FALSE(Eval(network, false, false));
+	ASSERT_TRUE(Eval(network, false, true));
+	ASSERT_TRUE(Eval(network, true, false));
+	ASSERT_FALSE(Eval(network, true, true));
+}
+
+//--------------------------------------------------
+// Helpers
+//--------------------------------------------------
+
+/**
+ * @brief A helper for evaluating the NN
+ * @param network The actual network
+ * @param value1 The value that we are dealing with
+ * @param value2 The value that we are dealing with
+ * @return true The result that we are dealing with 
+ */
+bool Eval(Network& network, bool value1, bool value2) 
+{
+	auto inputs = vector<double> { value1 ? 0.0 : 1.0, value2 ? 0.0 : 1.0, 1.0};
+	auto output = vector<double>();
+	network.Evaluate(inputs, output);
+	return output[0] < 0.5;
 }
