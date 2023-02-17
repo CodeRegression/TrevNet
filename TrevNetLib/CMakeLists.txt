@@ -18,6 +18,8 @@ add_library (TrevNetLib STATIC
 	Layer.cpp
 	NetworkUtils.cpp
 	Network.cpp
+	NetworkInfo.cpp
 )
+
 
 

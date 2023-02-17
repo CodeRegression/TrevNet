@@ -28,7 +28,9 @@ add_executable (TrevNetTests
 	Tests/NetworkUtils_Tests.cpp
 	Tests/Network_Tests.cpp
 	Tests/XOR_Test.cpp
+	Tests/NetworkInfo_Tests.cpp
 )
+
 
 target_link_libraries(TrevNetTests TrevNetLib NVLib UnitTestLib ${OpenCV_LIBS} OpenSSL::SSL GTest::Main)
 

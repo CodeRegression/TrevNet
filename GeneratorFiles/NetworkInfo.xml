@@ -1,0 +1,45 @@
+<?xml version="1.0" ?>
+
+<class>
+
+<namespace>NVL_AI</namespace>
+<solution>TrevNetLib</solution>
+<name>NetworkInfo</name>
+<description>A helper class for the loading and decoding of initStrings</description>
+
+<includes>
+    <include name="unordered_map" namespace="std" local="false" />
+    <include name="vector" namespace="std" local="false" />
+    <include name="iostream" namespace="std" local="false" />
+    <include name="Model/Edge.h" local="true" />
+    <include name="Layer.h" local="true" />
+</includes>
+
+<variables>
+    <variable type="vector<int>" name="layerCounts" code="10" />
+    <variable type="unordered_map<int, vector<Edge *>>" name="edges" code="10" />
+</variables>
+
+<constructors>
+
+    <!-- Construct one of these from the initializer string -->
+    <constructor type="custom" inline="false">
+        <parameter type="const string&" name="initString" description="An initializer string for neural networks" />
+    </constructor>
+
+</constructors>
+
+<methods>
+
+    <!-- Build Functionality -->
+    <method section="Build" access="public" return="void" name="BuildNetwork" description="Constructs a network from the loaded data" inline="false">
+        <parameter type="vector<Layer *>&" name="layer" description="The layer string that we are loading" />
+    </method> 
+       
+</methods>
+
+<tests>
+    <test name="confirm_load" description="Verify that the load happend correct" exception="false" />
+</tests> 
+
+</class>
