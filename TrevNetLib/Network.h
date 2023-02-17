@@ -21,11 +21,14 @@ namespace NVL_AI
 	private:
 		vector<Layer *> _layers;
 	public:
+		Network(const string& initString);
 		Network(NumberGenerator * generator, const vector<int>& structure);
 		~Network();
 
 		void Evaluate(const vector<double>& inputs, vector<double>& outputs);
 		double Update(const vector<double>& inputs, const vector<double>& expectedOutputs, double learnRate);
+
+		void GetInitString(ofstream& buffer);
 
 		inline vector<Layer *>& GetLayers() { return _layers; }
 	private:

@@ -38,7 +38,7 @@ TEST(XOR_Test, basic_xor_training_test)
 		auto total = 0.0;
 		for (auto row = 0; row < data.rows; row++) 
 		{
-			auto input = vector<double> { dataLink[row * 3 + 0], dataLink[row * 3 + 1]};
+			auto input = vector<double> { dataLink[row * 3 + 0], dataLink[row * 3 + 1] };
 			auto output = vector<double> { dataLink[row * 3 + 2]};
 			total += network.Update(input, output, 1e-2);
 		}

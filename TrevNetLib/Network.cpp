@@ -14,6 +14,15 @@ using namespace NVL_AI;
 //--------------------------------------------------
 
 /**
+ * @brief Create a network using an initializer string
+ * @param initString The initializer string for the given network
+ */
+Network::Network(const string& initString) 
+{
+	throw runtime_error("Not Implemented");
+}
+
+/**
  * @brief Custom Constructor
  * @param generator A random generator for the random weights
  * @param structure The structure for the network
@@ -165,4 +174,17 @@ void Network::BackPropagate(vector<Layer *>& network, const vector<double>& inpu
 	{
 		NetworkUtils::BackwardPropagate(network[i], network[i-1]);
 	}
+}
+
+//--------------------------------------------------
+// Update
+//--------------------------------------------------
+
+/**
+ * @brief Construct the init string
+ * @param buffer The buffer that we are writing to
+ */
+void Network::GetInitString(ofstream& buffer) 
+{
+	throw runtime_error("Not implemented");
 }

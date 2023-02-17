@@ -73,3 +73,19 @@ TEST(Network_Test, update)
 	// Confirm
 	ASSERT_GT(NetworkUtils::GetError(expected[0], output_1[0]), NetworkUtils::GetError(expected[0], output_2[0]));
 }
+
+/**
+ * @brief Confirms that the same input produces the same output 
+ */
+TEST(Network_Test, init_string_inverse_test) 
+{
+	FAIL() << "Not Implemented";
+}
+
+/**
+ * @brief Confirms that the network behaves in the predicated way when given weights
+ */
+TEST(Network_Test, load_test) 
+{
+	FAIL() << "Not Implemented";
+}
