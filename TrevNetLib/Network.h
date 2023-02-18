@@ -13,6 +13,7 @@ using namespace std;
 
 #include "NetworkUtils.h"
 #include "Generator/NumberGenerator.h"
+#include "NetworkInfo.h"
 
 namespace NVL_AI
 {

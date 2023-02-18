@@ -19,7 +19,8 @@ using namespace NVL_AI;
  */
 Network::Network(const string& initString) 
 {
-	throw runtime_error("Not Implemented");
+	auto loader = NetworkInfo(initString);
+	loader.BuildNetwork(_layers);
 }
 
 /**

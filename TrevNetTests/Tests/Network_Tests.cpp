@@ -85,7 +85,7 @@ TEST(Network_Test, update)
 TEST(Network_Test, init_string_inverse_test) 
 {
 	// Initialize
-	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2";
+	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2|1";
 
 	// Execute
 	auto network = Network(initString);
@@ -101,7 +101,7 @@ TEST(Network_Test, init_string_inverse_test)
 TEST(Network_Test, load_test) 
 {
 	// Initialize
-	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2";
+	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-4|1";
 	auto network = Network(initString);
 
 	// Confirm
@@ -124,8 +124,8 @@ TEST(Network_Test, load_test)
  */
 bool Eval(Network& network, bool value1, bool value2) 
 {
-	auto inputs = vector<double> { value1 ? 0.0 : 1.0, value2 ? 0.0 : 1.0, 1.0};
+	auto inputs = vector<double> { value1 ? 1.0 : 0.0, value2 ? 1.0 : 0.0, 1.0};
 	auto output = vector<double>();
 	network.Evaluate(inputs, output);
-	return output[0] < 0.5;
+	return output[0] > 0.5;
 }

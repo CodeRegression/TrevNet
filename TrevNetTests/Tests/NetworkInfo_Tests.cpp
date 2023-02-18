@@ -26,7 +26,7 @@ void ValidateEdge(Edge * edge, int source, int destination, double weight);
 TEST(NetworkInfo_Test, confirm_load)
 {
 	// Setup
-	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2";
+	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2|1";
 
 	// Execute
 	auto info = NetworkInfo(initString);
@@ -44,7 +44,7 @@ TEST(NetworkInfo_Test, confirm_load)
 	ValidateEdge(edges_1[2], 1, 0, 1);
 	ValidateEdge(edges_1[3], 1, 1, 1);
 	ValidateEdge(edges_1[4], 2, 0, 0);
-	ValidateEdge(edges_1[5], 1, 1, -1.5);
+	ValidateEdge(edges_1[5], 2, 1, -1.5);
 
 	auto& edges_2 = info.GetEdges(1);
 	ASSERT_EQ(edges_2.size(), 2);
