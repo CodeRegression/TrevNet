@@ -34,3 +34,17 @@ void NetworkInfo::BuildNetwork(vector<Layer *>& layer)
 {
 	throw runtime_error("Not implemented");
 }
+
+//--------------------------------------------------
+// Getters
+//--------------------------------------------------
+
+/**
+ * @brief Retrieve the edges for a given layer
+ * @param layerId The layer identifier of the layer that we want the edges for
+ * @return vector<Edge*>& The resultant edges
+ */
+vector<Edge*> & NetworkInfo::GetEdges(int layerId) 
+{
+	throw runtime_error("Not Implemented");
+}

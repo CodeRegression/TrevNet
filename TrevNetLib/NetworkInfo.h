@@ -28,6 +28,7 @@ namespace NVL_AI
 		NetworkInfo(const string& initString);
 
 		void BuildNetwork(vector<Layer *>& layer);
+		vector<Edge*> & GetEdges(int layerId);
 
 		inline vector<int>& GetLayerCounts() { return _layerCounts; }
 		inline unordered_map<int, vector<Edge *>>& GetEdges() { return _edges; }
