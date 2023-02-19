@@ -71,6 +71,27 @@ void Layer::GetDestinationEdges(int nodeId, EdgeSet& edges)
 }
 
 //--------------------------------------------------
+// Get the layer string
+//--------------------------------------------------
+
+/**
+ * @brief Retrieve the layer string value
+ * @param value The value associated with the layer string
+ */
+void Layer::GetString(ostream& value) 
+{
+	if (_edges.size() == 0) { value << _nodes.size(); return; }
+
+	for (auto i = 0; i < _edges.size(); i++) 
+	{
+		if (i != 0) value << ",";
+		value << _edges[i]->GetSource() << ":";
+		value << _edges[i]->GetDestination() << ":";
+		value << fixed << setprecision(6) << _edges[i]->GetWeight();
+	}
+}
+
+//--------------------------------------------------
 // Helpers
 //--------------------------------------------------
 

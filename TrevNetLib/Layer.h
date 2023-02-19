@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <iomanip>
 #include <vector>
 #include <unordered_map>
 #include <iostream>
@@ -35,6 +36,7 @@ namespace NVL_AI
 
 		void GetSourceEdges(int nodeId, EdgeSet& edges);
 		void GetDestinationEdges(int nodeId, EdgeSet& edges);
+		void GetString(ostream& value);
 
 		inline vector<Node *>& GetNodes() { return _nodes; }
 		inline EdgeSet& GetEdges() { return _edges; }

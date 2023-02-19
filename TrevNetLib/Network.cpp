@@ -187,5 +187,9 @@ void Network::BackPropagate(vector<Layer *>& network, const vector<double>& inpu
  */
 void Network::GetInitString(ostream& buffer) 
 {
-	throw runtime_error("Not implemented");
+	for (auto i = 0; i < _layers.size(); i++) 
+	{
+		if (i != 0) buffer << "|";
+		_layers[i]->GetString(buffer);
+	}
 }

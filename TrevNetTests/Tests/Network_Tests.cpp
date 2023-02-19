@@ -85,14 +85,15 @@ TEST(Network_Test, update)
 TEST(Network_Test, init_string_inverse_test) 
 {
 	// Initialize
-	auto initString = "0:0:1,0:1:1,1:0:1,1:1:1,2:0:0,2:1:-1.5|0:0:1,1:0:-2|1";
+	auto initString = "0:0:1.000000,0:1:1.000000,1:0:1.000000,1:1:1.000000,2:0:0.000000,2:1:-1.500000|0:0:1.000000,1:0:-2.000000|1";
 
 	// Execute
 	auto network = Network(initString);
 	auto buffer = stringstream(); network.GetInitString(buffer);
+	auto bufferString = buffer.str();
 
 	// Confirm
-	ASSERT_EQ(initString, buffer.str());
+	ASSERT_EQ(initString, bufferString);
 }
 
 /**
