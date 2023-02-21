@@ -46,6 +46,10 @@ TEST(XOR_Test, basic_xor_training_test)
 		cout << "Epoch: " << i << " --- Error: " << (total / 4.0) << endl;
 	}
 
+	// Debug Output the final result
+	auto model = stringstream(); network.GetModelString(model);
+	cout << "Model: " << model.str() << endl;
+
 	// Cout Testing Results
 	ASSERT_EQ(Evaluate(network, 0, 0), 0);
 	ASSERT_EQ(Evaluate(network, 1, 0), 1);

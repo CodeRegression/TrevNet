@@ -89,7 +89,7 @@ TEST(Network_Test, init_string_inverse_test)
 
 	// Execute
 	auto network = Network(initString);
-	auto buffer = stringstream(); network.GetInitString(buffer);
+	auto buffer = stringstream(); network.GetModelString(buffer);
 	auto bufferString = buffer.str();
 
 	// Confirm
