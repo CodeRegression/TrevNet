@@ -29,7 +29,7 @@ namespace NVL_AI
 		void Evaluate(const vector<double>& inputs, vector<double>& outputs);
 		double Update(const vector<double>& inputs, const vector<double>& expectedOutputs, double learnRate);
 
-		void GetInitString(ostream& buffer);
+		void GetModelString(ostream& buffer);
 
 		inline vector<Layer *>& GetLayers() { return _layers; }
 	private:
