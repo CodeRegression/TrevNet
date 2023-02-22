@@ -32,6 +32,7 @@ namespace NVL_AI
 		void GetModelString(ostream& buffer);
 
 		inline vector<Layer *>& GetLayers() { return _layers; }
+		inline int GetOutputCount() { return _layers[_layers.size() - 1]->GetNodeCount(); }
 	private:
 		void ConnectLayer(Layer * layer, Layer * next, NumberGenerator * generator);
 		void BackPropagate(vector<Layer *>& network, const vector<double>& inputs, const vector<double>& expected);
